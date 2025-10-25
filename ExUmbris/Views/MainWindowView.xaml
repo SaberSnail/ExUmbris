@@ -1,0 +1,35 @@
+﻿<Window
+	x:Class="ExUmbris.Views.MainWindowView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:GoldenAnvil.Utility.Windows.Controls;assembly=GoldenAnvil.Utility.Windows"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:root="clr-namespace:ExUmbris"
+	xmlns:shared="clr-namespace:ExUmbris.Themes.Shared"
+	xmlns:themes="clr-namespace:GoldenAnvil.Utility.Windows.Themes;assembly=GoldenAnvil.Utility.Windows"
+	xmlns:utility="clr-namespace:GoldenAnvil.Utility.Windows;assembly=GoldenAnvil.Utility.Windows"
+	xmlns:viewModels="clr-namespace:ExUmbris.ViewModels"
+	x:Name="ThisView"
+	Title="Ex Umbris"
+	Width="1200"
+	Height="900"
+	Focusable="False"
+	mc:Ignorable="d">
+
+	<Window.Resources>
+		<ResourceDictionary>
+			<DataTemplate DataType="{x:Type viewModels:MainWindowViewModel}">
+				<DockPanel
+					Background="{DynamicResource WindowBackgroundBrush}"
+					LastChildFill="true"
+					TextBlock.Foreground="{DynamicResource FontBrush}" />
+			</DataTemplate>
+		</ResourceDictionary>
+	</Window.Resources>
+
+	<ContentControl
+		themes:ThemesUtility.CurrentThemeUrl="{Binding Source={x:Static root:AppModel.Instance}, Path=CurrentTheme}"
+		Content="{Binding ViewModel, ElementName=ThisView}"
+		Focusable="False" />
+</Window>

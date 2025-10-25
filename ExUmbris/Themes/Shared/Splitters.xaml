@@ -1,0 +1,19 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:GoldenAnvil.Utility.Windows.Controls;assembly=GoldenAnvil.Utility.Windows"
+	xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+	<system:Double x:Key="SplitterWidth">4.0</system:Double>
+
+	<Style TargetType="{x:Type GridSplitter}">
+		<Setter Property="Background" Value="{DynamicResource SplitterBackgroundBrush}" />
+		<Setter Property="Width" Value="{DynamicResource SplitterWidth}" />
+	</Style>
+
+	<Style TargetType="{x:Type controls:DockPanelSplitter}">
+		<Setter Property="Background" Value="{DynamicResource SplitterBackgroundBrush}" />
+		<Setter Property="Width" Value="{DynamicResource SplitterWidth}" />
+	</Style>
+
+</ResourceDictionary>
