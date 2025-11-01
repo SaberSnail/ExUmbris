@@ -2,7 +2,7 @@
 	x:Class="ExUmbris.Views.MainWindowView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:controls="clr-namespace:GoldenAnvil.Utility.Windows.Controls;assembly=GoldenAnvil.Utility.Windows"
+	xmlns:controls="clr-namespace:ExUmbris.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:root="clr-namespace:ExUmbris"
@@ -20,10 +20,9 @@
 	<Window.Resources>
 		<ResourceDictionary>
 			<DataTemplate DataType="{x:Type viewModels:MainWindowViewModel}">
-				<DockPanel
-					Background="{DynamicResource WindowBackgroundBrush}"
-					LastChildFill="true"
-					TextBlock.Foreground="{DynamicResource FontBrush}" />
+				<Grid Background="{DynamicResource WindowBackgroundBrush}">
+					<controls:MapControl Map="{Binding Map}" />
+				</Grid>
 			</DataTemplate>
 		</ResourceDictionary>
 	</Window.Resources>

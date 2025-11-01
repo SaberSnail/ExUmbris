@@ -5,15 +5,24 @@ namespace ExUmbris.ViewModels;
 
 public sealed class MainWindowViewModel : ViewModelBase, IDisposable
 {
-	public static async Task<MainWindowViewModel> CreateAsync(TaskStateController state)
+	public static async Task<MainWindowViewModel> CreateAsync(TaskStateController state, Random rng)
 	{
 		await state.ToSyncContext();
-		return new MainWindowViewModel();
+
+		var factory = new RandomMapFactory();
+		var map = new MapViewModel();
+		map.Initialize(factory, rng, 25);
+
+		return new MainWindowViewModel(map);
 	}
 
-	private MainWindowViewModel()
+	private MainWindowViewModel(MapViewModel map)
 	{
+		Map = map;
 	}
+
+	public MapViewModel Map { get; }
+
 
 	public void Dispose()
 	{

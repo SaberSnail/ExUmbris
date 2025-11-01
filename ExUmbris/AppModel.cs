@@ -14,11 +14,14 @@ public sealed class AppModel : NotifyPropertyChangedDispatcherBase
 	private AppModel()
 	{
 		m_taskGroup = new TaskGroup();
+		m_rng = new Random();
 		LogManager.Initialize(new DebugLogDestination());
 		m_currentTheme = new Uri(@"/Themes/Default/Default.xaml", UriKind.Relative);
 	}
 
 	public TaskGroup TaskGroup => m_taskGroup;
+
+	public Random Rng => m_rng;
 
 	public MainWindowViewModel? MainWindow
 	{
@@ -44,7 +47,7 @@ public sealed class AppModel : NotifyPropertyChangedDispatcherBase
 	{
 		await state.ToSyncContext();
 
-		m_mainWindow = await MainWindowViewModel.CreateAsync(state);
+		m_mainWindow = await MainWindowViewModel.CreateAsync(state, m_rng);
 	}
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -57,6 +60,7 @@ public sealed class AppModel : NotifyPropertyChangedDispatcherBase
 
 	private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(AppModel));
 	private static readonly Lazy<AppModel> s_appModel = new(() => new AppModel());
+	private readonly Random m_rng;
 
 	private MainWindowViewModel? m_mainWindow;
 	private Uri m_currentTheme;
