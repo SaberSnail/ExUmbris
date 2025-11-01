@@ -4,7 +4,7 @@ public sealed class MapViewModel : ViewModelBase
 {
 	public MapViewModel()
 	{
-		MapNodes = [];
+		m_mapNodes = [];
 	}
 
 	public void Initialize(IMapFactory mapFactory, Random rng, int nodeCount)

@@ -9,6 +9,22 @@ namespace ExUmbris.Controls;
 
 public sealed class MapControl : FrameworkElement
 {
+	public MapControl()
+	{
+		m_visuals = new VisualCollection(this);
+		m_nodeVisuals = [];
+		m_lineVisuals = [];
+
+		m_nodePalette = new MapNodePalette
+		{
+			NodeBrush = Brushes.DarkBlue,
+			HoverNodeBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0xcb)).Frozen(),
+			NodePen = new Pen(new SolidColorBrush(Color.FromRgb(0x8d, 0xb8, 0xc6)), 2).Frozen(),
+			HoverNodePen = new Pen(Brushes.LightBlue, 2).Frozen(),
+			HoverGlowBrush = MapNodeVisual.CreateHoverGlowBrush(),
+		};
+	}
+
 	public static readonly DependencyProperty MapProperty =
 		DependencyPropertyUtility<MapControl>.Register(x => x.Map, new PropertyChangedCallback(OnMapChanged));
 
@@ -18,17 +34,71 @@ public sealed class MapControl : FrameworkElement
 		set => SetValue(MapProperty, value);
 	}
 
-	public MapControl()
-	{
-		m_visuals = new VisualCollection(this);
-		m_nodeVisuals = [];
-		m_lineVisuals = [];
-	}
-
 	private static void OnMapChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
 		var control = (MapControl) d;
 		control.RebuildVisuals();
+	}
+
+	protected override int VisualChildrenCount => m_visuals.Count;
+
+	protected override Visual GetVisualChild(int index) => m_visuals[index];
+
+	protected override void OnRender(DrawingContext drawingContext)
+	{
+		// Background
+		drawingContext.DrawRectangle(Brushes.Black, null, new Rect(0, 0, ActualWidth, ActualHeight));
+
+		// Border outside the map area
+		var outerBounds = GetSquareBounds(ActualWidth, ActualHeight);
+		outerBounds.Inflate(c_mapBorderThickness, c_mapBorderThickness);
+		drawingContext.DrawRectangle(null, new Pen(Brushes.DarkGray, c_mapBorderThickness), outerBounds);
+
+		base.OnRender(drawingContext);
+	}
+
+	protected override Size ArrangeOverride(Size finalSize)
+	{
+		if (Map?.MapNodes is not null)
+		{
+			var squareBounds = GetSquareBounds(finalSize.Width, finalSize.Height);
+
+			foreach (var nodeVisual in m_nodeVisuals.Values)
+			{
+				var center = MapToControl(nodeVisual.Node.Coordinates, squareBounds);
+				nodeVisual.Offset = new Vector(center.X, center.Y);
+			}
+
+			foreach (var lineVisual in m_lineVisuals)
+				lineVisual.Render();
+		}
+		return base.ArrangeOverride(finalSize);
+	}
+
+	protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
+	{
+		base.OnMouseMove(e);
+		if (Map?.MapNodes is null)
+			return;
+
+		var mousePos = e.GetPosition(this);
+		bool shouldInvalidate = false;
+
+		foreach (var node in m_nodeVisuals.Values)
+		{
+			node.IsHovered = false;
+			shouldInvalidate = true;
+		}
+
+		var hitResult = VisualTreeHelper.HitTest(this, mousePos);
+		if (hitResult?.VisualHit is MapNodeVisual nodeVisual)
+		{
+			nodeVisual.IsHovered = true;
+			shouldInvalidate = true;
+		}
+
+		if (shouldInvalidate)
+			InvalidateVisual();
 	}
 
 	private void RebuildVisuals()
@@ -44,7 +114,7 @@ public sealed class MapControl : FrameworkElement
 		// Create node visuals and index by node ID
 		foreach (var node in Map.MapNodes)
 		{
-			var visual = new MapNodeVisual(node, c_nodeRadius, dpi);
+			var visual = new MapNodeVisual(node, dpi, m_nodePalette);
 			visual.Render();
 			var center = MapToControl(node.Coordinates, bounds);
 			visual.Offset = new Vector(center.X, center.Y);
@@ -67,6 +137,10 @@ public sealed class MapControl : FrameworkElement
 				var connectionVisual = new MapConnectionVisual(node1, node2);
 				connectionVisual.Render();
 				m_lineVisuals.Add(connectionVisual);
+
+				// Add connection to both nodes
+				node1.ConnectedConnections.Add(connectionVisual);
+				node2.ConnectedConnections.Add(connectionVisual);
 			}
 		}
 
@@ -76,46 +150,7 @@ public sealed class MapControl : FrameworkElement
 		InvalidateVisual();
 	}
 
-	protected override int VisualChildrenCount => m_visuals.Count;
-
-	protected override Visual GetVisualChild(int index) => m_visuals[index];
-
-	protected override void OnRender(DrawingContext drawingContext)
-	{
-		// Draw background
-		drawingContext.DrawRectangle(Brushes.Black, null, new Rect(0, 0, ActualWidth, ActualHeight));
-
-		// Draw border outside the map area
-		var outerBounds = GetSquareBounds(ActualWidth, ActualHeight);
-		outerBounds.Inflate(c_mapBorderThickness, c_mapBorderThickness);
-		drawingContext.DrawRectangle(null, new Pen(Brushes.DarkGray, c_mapBorderThickness), outerBounds);
-
-		base.OnRender(drawingContext);
-	}
-
-	protected override Size ArrangeOverride(Size finalSize)
-	{
-		// Reposition node and line visuals according to new size
-		if (Map != null && Map.MapNodes != null)
-		{
-			var squareBounds = GetSquareBounds(finalSize.Width, finalSize.Height);
-
-			// Update node visuals
-			foreach (var node in Map.MapNodes)
-			{
-				var visual = m_nodeVisuals[node.Id];
-				var center = MapToControl(node.Coordinates, squareBounds);
-				visual.Offset = new Vector(center.X, center.Y);
-			}
-
-			// Update line visuals
-			foreach (var lineVisual in m_lineVisuals)
-				lineVisual.Render();
-		}
-		return base.ArrangeOverride(finalSize);
-	}
-
-	private Rect GetSquareBounds(double width, double height)
+	private static Rect GetSquareBounds(double width, double height)
 	{
 		var size = Math.Max(0, Math.Min(width, height) - 2 * c_mapBorderThickness);
 		var x = (width - size) / 2;
@@ -123,18 +158,17 @@ public sealed class MapControl : FrameworkElement
 		return new Rect(x, y, size, size);
 	}
 
-	private Point MapToControl(MapCoordinates coords, Rect bounds)
+	private static Point MapToControl(MapCoordinates coords, Rect bounds)
 	{
-		// Map [-1,1] to bounds (which now excludes border)
 		var x = bounds.Left + (coords.X + 1.0) / 2.0 * bounds.Width;
 		var y = bounds.Top + (1.0 - (coords.Y + 1.0) / 2.0) * bounds.Height;
 		return new Point(x, y);
 	}
 
 	private const double c_mapBorderThickness = 4.0;
-	const double c_nodeRadius = 10.0;
 
 	private readonly VisualCollection m_visuals;
 	private readonly Dictionary<int, MapNodeVisual> m_nodeVisuals;
 	private readonly List<MapConnectionVisual> m_lineVisuals;
+	private readonly MapNodePalette m_nodePalette;
 }
