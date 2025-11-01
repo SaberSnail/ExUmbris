@@ -9,20 +9,25 @@ public sealed class MainWindowViewModel : ViewModelBase, IDisposable
 	{
 		await state.ToSyncContext();
 
-		var factory = new RandomMapFactory();
+		var factory = new RandomGameFactory();
 		var map = new MapViewModel();
 		map.Initialize(factory, rng, 25);
 
-		return new MainWindowViewModel(map);
+		var actorManager = new ActorManagerViewModel();
+		actorManager.Initialize(factory, rng, 10, map);
+
+		return new MainWindowViewModel(map, actorManager);
 	}
 
-	private MainWindowViewModel(MapViewModel map)
+	private MainWindowViewModel(MapViewModel map, ActorManagerViewModel actorManager)
 	{
 		Map = map;
+		ActorManager = actorManager;
 	}
 
 	public MapViewModel Map { get; }
 
+	public ActorManagerViewModel ActorManager { get; }
 
 	public void Dispose()
 	{

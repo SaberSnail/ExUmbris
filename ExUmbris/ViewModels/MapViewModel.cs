@@ -7,15 +7,16 @@ public sealed class MapViewModel : ViewModelBase
 		m_mapNodes = [];
 	}
 
-	public void Initialize(IMapFactory mapFactory, Random rng, int nodeCount)
+	public IReadOnlyList<MapNodeViewModel> MapNodes
 	{
-		var nodes = mapFactory.CreateMapNodes(rng, nodeCount);
-		MapNodes = nodes;
-	}
-
-	public IReadOnlyList<MapNodeViewModel> MapNodes {
 		get => VerifyAccess(m_mapNodes);
 		private set => SetPropertyField(value, ref m_mapNodes);
+	}
+
+	public void Initialize(IGameFactory gameFactory, Random rng, int nodeCount)
+	{
+		var nodes = gameFactory.CreateMapNodes(rng, nodeCount);
+		MapNodes = nodes;
 	}
 
 	public IReadOnlyList<MapNodeViewModel> GetShortestRoute(MapNodeViewModel sourceNode, MapNodeViewModel destinationNode)

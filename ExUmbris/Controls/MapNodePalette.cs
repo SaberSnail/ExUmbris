@@ -6,6 +6,7 @@ public sealed class MapNodePalette
 {
 	public required Brush NodeBrush { get; init; }
 	public required Brush HoverNodeBrush { get; init; }
+	public required Brush NodeActorBrush { get; init; }
 	public required Pen NodePen { get; init; }
 	public required Pen HoverNodePen { get; init; }
 	public required Brush HoverGlowBrush { get; init; }

@@ -3,12 +3,13 @@ using GoldenAnvil.Utility.Logging;
 
 namespace ExUmbris.ViewModels;
 
-public interface IMapFactory
+public interface IGameFactory
 {
 	IReadOnlyList<MapNodeViewModel> CreateMapNodes(Random rng, int count);
+	IReadOnlyList<ActorViewModel> CreateActors(Random rng, int count, MapViewModel map);
 }
 
-public sealed class RandomMapFactory : IMapFactory
+public sealed class RandomGameFactory : IGameFactory
 {
 	public IReadOnlyList<MapNodeViewModel> CreateMapNodes(Random rng, int count)
 	{
@@ -97,5 +98,23 @@ public sealed class RandomMapFactory : IMapFactory
 		return nodes;
 	}
 
-	private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(RandomMapFactory));
+	public IReadOnlyList<ActorViewModel> CreateActors(Random rng, int count, MapViewModel map)
+	{
+		var actors = new List<ActorViewModel>(count);
+		for (int i = 0; i < count; i++)
+		{
+			var actor = new ActorViewModel
+			{
+				Name = $"Actor {i + 1}",
+			};
+			var nodeIndex = rng.Next(map.MapNodes.Count);
+			var node = map.MapNodes[nodeIndex];
+			actor.CurrentNode = node;
+			actors.Add(actor);
+		}
+
+		return actors;
+	}
+
+	private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(RandomGameFactory));
 }

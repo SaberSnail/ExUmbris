@@ -9,20 +9,22 @@ public sealed class ActorViewModel : ViewModelBase
 
 	public int Id { get; init; }
 	public string Name { get; set; }
-	public MapNodeViewModel? CurrentNode => VerifyAccess(m_currentNode);
-
-	public void MoveToNode(MapNodeViewModel node)
+	public MapNodeViewModel? CurrentNode
 	{
-		if (CurrentNode == node)
-			return;
+		get => VerifyAccess(m_currentNode);
+		set
+		{
+			if (CurrentNode == value)
+				return;
 
-		using var _ = ScopedPropertyChange(nameof(CurrentNode));
+			using var _ = ScopedPropertyChange(nameof(CurrentNode));
 
-		if (m_currentNode is not null)
-			m_currentNode.RemoveActor(this);
-		m_currentNode = node;
-		if (m_currentNode is not null)
-			m_currentNode.AddActor(this);
+			if (m_currentNode is not null)
+				m_currentNode.RemoveActor(this);
+			m_currentNode = value;
+			if (m_currentNode is not null)
+				m_currentNode.AddActor(this);
+		}
 	}
 
 	private MapNodeViewModel? m_currentNode;

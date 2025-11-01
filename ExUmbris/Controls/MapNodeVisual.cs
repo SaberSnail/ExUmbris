@@ -57,6 +57,41 @@ public sealed class MapNodeVisual : DrawingVisual
 
 		dc.DrawEllipse(m_palette.GetNodeBrush(m_isHovered), m_palette.GetNodePen(m_isHovered), new Point(0, 0), c_nodeRadius, c_nodeRadius);
 
+		// Draw actors in an arc above the node
+		var actors = Node.Actors;
+		if (actors.Count > 0)
+		{
+			var actorsArcRadius = c_nodeRadius + c_actorRadius + c_actorPadding;
+			var actorEffectiveRadius = c_actorRadius + c_actorPadding / 2.0;
+			var anglePerActor = 2.0 * Math.Asin(actorEffectiveRadius / actorsArcRadius);
+
+			var actorCount = Math.Min(actors.Count, GetMaxActors());
+			int GetMaxActors()
+			{
+				var excludedAngle = Math.Acos(c_nodeRadius / actorsArcRadius);
+				var availableAngle = 2.0 * Math.PI - 2.0 * excludedAngle;
+				return (int) Math.Floor(availableAngle / anglePerActor);
+			}
+
+			var angle = Math.PI / 2.0 + (anglePerActor / 2.0) - (anglePerActor * actorCount / 2.0);
+			for (int i = 0; i < actorCount; i++)
+			{
+				var x = actorsArcRadius * Math.Cos(angle);
+				var y = -actorsArcRadius * Math.Sin(angle);
+				dc.DrawEllipse(m_palette.NodeActorBrush, null, new Point(x, y), c_actorRadius, c_actorRadius);
+
+				// If not all actors are shown, draw a cross centered on the ellipse of the right-most actor
+				if (actorCount < actors.Count && i == 0)
+				{
+					var crossPen = new Pen(Brushes.Black, 1.0).Frozen();
+					dc.DrawLine(crossPen, new Point(x, y - c_actorRadius), new Point(x, y + c_actorRadius));
+					dc.DrawLine(crossPen, new Point(x - c_actorRadius, y), new Point(x + c_actorRadius, y));
+				}
+
+				angle += anglePerActor;
+			}
+		}
+
 		var formattedText = new FormattedText(
 			Node.Name,
 			System.Globalization.CultureInfo.CurrentCulture,
@@ -88,10 +123,12 @@ public sealed class MapNodeVisual : DrawingVisual
 		bool isInEllipse = dx * dx + dy * dy <= effectiveNodeRadius * effectiveNodeRadius;
 		bool isInText = m_cachedTextRect.Contains(point);
 
-		return isInEllipse || isInText ?  new PointHitTestResult(this, point) : null;
+		return isInEllipse || isInText ? new PointHitTestResult(this, point) : null;
 	}
 
 	const double c_nodeRadius = 10.0;
+	const double c_actorRadius = 3.0;
+	const double c_actorPadding = 2.0;
 	private const double c_hoverGlowThickness = 12.0;
 
 	private readonly double m_pixelsPerDip;

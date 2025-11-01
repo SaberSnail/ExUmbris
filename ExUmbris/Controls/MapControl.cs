@@ -19,6 +19,7 @@ public sealed class MapControl : FrameworkElement
 		{
 			NodeBrush = Brushes.DarkBlue,
 			HoverNodeBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0xcb)).Frozen(),
+			NodeActorBrush = Brushes.Gold,
 			NodePen = new Pen(new SolidColorBrush(Color.FromRgb(0x8d, 0xb8, 0xc6)), 2).Frozen(),
 			HoverNodePen = new Pen(Brushes.LightBlue, 2).Frozen(),
 			HoverGlowBrush = MapNodeVisual.CreateHoverGlowBrush(),
