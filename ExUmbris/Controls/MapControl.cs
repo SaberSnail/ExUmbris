@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 using ExUmbris.Models;
 using ExUmbris.ViewModels;
@@ -14,6 +13,7 @@ public sealed class MapControl : FrameworkElement
 		m_visuals = new VisualCollection(this);
 		m_nodeVisuals = [];
 		m_edgeVisuals = [];
+		m_routeVisuals = [];
 
 		m_nodePalette = new MapNodePalette
 		{
@@ -72,6 +72,9 @@ public sealed class MapControl : FrameworkElement
 
 			foreach (var edgeVisual in m_edgeVisuals)
 				edgeVisual.Render();
+
+			foreach (var routeVisual in m_routeVisuals)
+				routeVisual.Render();
 		}
 		return base.ArrangeOverride(finalSize);
 	}
@@ -87,19 +90,50 @@ public sealed class MapControl : FrameworkElement
 
 		foreach (var node in m_nodeVisuals.Values)
 		{
-			node.IsHovered = false;
-			shouldInvalidate = true;
+			if (node.IsHovered)
+			{
+				UpdateNodeIsHovered(node, false);
+				shouldInvalidate = true;
+			}
 		}
 
 		var hitResult = VisualTreeHelper.HitTest(this, mousePos);
 		if (hitResult?.VisualHit is MapNodeVisual nodeVisual)
 		{
-			nodeVisual.IsHovered = true;
-			shouldInvalidate = true;
+			if (!nodeVisual.IsHovered)
+			{
+				UpdateNodeIsHovered(nodeVisual, true);
+				shouldInvalidate = true;
+			}
 		}
 
 		if (shouldInvalidate)
 			InvalidateVisual();
+	}
+
+	private void UpdateNodeIsHovered(MapNodeVisual nodeVisual, bool isHovered)
+	{
+		nodeVisual.IsHovered = isHovered;
+		if (isHovered)
+		{
+			foreach (var actor in nodeVisual.Node.Actors)
+			{
+				if (actor.CurrentRoute.Count < 2)
+					continue;
+				var routeNodes = actor.CurrentRoute
+					.Select(n => m_nodeVisuals[n.Id])
+					.ToList();
+				var routeVisual = new MapRouteVisual(routeNodes);
+				routeVisual.Render();
+				m_routeVisuals.Add(routeVisual);
+			}
+			RefreshChildVisuals();
+		}
+		else
+		{
+			m_routeVisuals.Clear();
+			RefreshChildVisuals();
+		}
 	}
 
 	private void RebuildVisuals()
@@ -108,7 +142,10 @@ public sealed class MapControl : FrameworkElement
 		m_nodeVisuals.Clear();
 		m_edgeVisuals.Clear();
 		if ((Map?.MapNodes?.Count ?? 0) == 0)
+		{
+			InvalidateVisual();
 			return;
+		}
 
 		var bounds = GetSquareBounds(ActualWidth, ActualHeight);
 		var dpi = VisualTreeHelper.GetDpi(this).PixelsPerDip;
@@ -146,9 +183,14 @@ public sealed class MapControl : FrameworkElement
 			}
 		}
 
-		foreach (var edge in m_edgeVisuals.Cast<DrawingVisual>().Concat(m_nodeVisuals.Values))
-			m_visuals.Add(edge);
+		RefreshChildVisuals();
+	}
 
+	private void RefreshChildVisuals()
+	{
+		m_visuals.Clear();
+		foreach (var edge in m_edgeVisuals.Cast<DrawingVisual>().Concat(m_nodeVisuals.Values).Concat(m_routeVisuals))
+			m_visuals.Add(edge);
 		InvalidateVisual();
 	}
 
@@ -172,5 +214,6 @@ public sealed class MapControl : FrameworkElement
 	private readonly VisualCollection m_visuals;
 	private readonly Dictionary<int, MapNodeVisual> m_nodeVisuals;
 	private readonly List<MapEdgeVisual> m_edgeVisuals;
+	private readonly List<MapRouteVisual> m_routeVisuals;
 	private readonly MapNodePalette m_nodePalette;
 }

@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 using ExUmbris.ViewModels;
@@ -27,6 +28,14 @@ public sealed class MapNodeVisual : DrawingVisual
 		m_pixelsPerDip = pixelsPerDip;
 		m_palette = palette;
 		Edges = [];
+
+		Node.PropertyChanged += OnNodePropertyChanged;
+	}
+
+	private void OnNodePropertyChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		if (e.PropertyName is nameof(MapNodeViewModel.Name) or nameof(MapNodeViewModel.Actors))
+			Render();
 	}
 
 	public MapNodeViewModel Node { get; }
@@ -52,66 +61,79 @@ public sealed class MapNodeVisual : DrawingVisual
 	{
 		using var dc = RenderOpen();
 
-		if (m_isHovered)
-			dc.DrawEllipse(m_palette.HoverGlowBrush, null, new Point(0, 0), c_nodeRadius + c_hoverGlowThickness, c_nodeRadius + c_hoverGlowThickness);
+		RenderNode();
+		RenderActors();
+		RenderName();
 
-		dc.DrawEllipse(m_palette.GetNodeBrush(m_isHovered), m_palette.GetNodePen(m_isHovered), new Point(0, 0), c_nodeRadius, c_nodeRadius);
-
-		// Draw actors in an arc above the node
-		var actors = Node.Actors;
-		if (actors.Count > 0)
+		void RenderNode()
 		{
-			var actorsArcRadius = c_nodeRadius + c_actorRadius + c_actorPadding;
-			var actorEffectiveRadius = c_actorRadius + c_actorPadding / 2.0;
-			var anglePerActor = 2.0 * Math.Asin(actorEffectiveRadius / actorsArcRadius);
+			if (m_isHovered)
+				dc.DrawEllipse(m_palette.HoverGlowBrush, null, new Point(0, 0), c_nodeRadius + c_hoverGlowThickness, c_nodeRadius + c_hoverGlowThickness);
 
-			var actorCount = Math.Min(actors.Count, GetMaxActors());
-			int GetMaxActors()
+			dc.DrawEllipse(m_palette.GetNodeBrush(m_isHovered), m_palette.GetNodePen(m_isHovered), new Point(0, 0), c_nodeRadius, c_nodeRadius);
+		}
+
+		void RenderActors()
+		{
+			// Draw actors in an arc above the node
+			var actors = Node.Actors;
+			if (actors.Count > 0)
 			{
-				var excludedAngle = Math.Acos(c_nodeRadius / actorsArcRadius);
-				var availableAngle = 2.0 * Math.PI - 2.0 * excludedAngle;
-				return (int) Math.Floor(availableAngle / anglePerActor);
-			}
+				var actorsArcRadius = c_nodeRadius + c_actorRadius + c_actorPadding;
+				var actorEffectiveRadius = c_actorRadius + c_actorPadding / 2.0;
+				var anglePerActor = 2.0 * Math.Asin(actorEffectiveRadius / actorsArcRadius);
 
-			var angle = Math.PI / 2.0 + (anglePerActor / 2.0) - (anglePerActor * actorCount / 2.0);
-			for (int i = 0; i < actorCount; i++)
-			{
-				var x = actorsArcRadius * Math.Cos(angle);
-				var y = -actorsArcRadius * Math.Sin(angle);
-				dc.DrawEllipse(m_palette.NodeActorBrush, null, new Point(x, y), c_actorRadius, c_actorRadius);
-
-				// If not all actors are shown, draw a cross centered on the ellipse of the right-most actor
-				if (actorCount < actors.Count && i == 0)
+				var actorCount = Math.Min(actors.Count, GetMaxActors());
+				int GetMaxActors()
 				{
-					var crossPen = new Pen(Brushes.Black, 1.0).Frozen();
-					dc.DrawLine(crossPen, new Point(x, y - c_actorRadius), new Point(x, y + c_actorRadius));
-					dc.DrawLine(crossPen, new Point(x - c_actorRadius, y), new Point(x + c_actorRadius, y));
+					var excludedAngle = Math.Acos(c_nodeRadius / actorsArcRadius);
+					var availableAngle = 2.0 * Math.PI - 2.0 * excludedAngle;
+					return (int) Math.Floor(availableAngle / anglePerActor);
 				}
 
-				angle += anglePerActor;
+				var angle = Math.PI / 2.0 + (anglePerActor / 2.0) - (anglePerActor * actorCount / 2.0);
+				for (int i = 0; i < actorCount; i++)
+				{
+					var x = actorsArcRadius * Math.Cos(angle);
+					var y = -actorsArcRadius * Math.Sin(angle);
+					dc.DrawEllipse(m_palette.NodeActorBrush, null, new Point(x, y), c_actorRadius, c_actorRadius);
+
+					// If not all actors are shown, draw a cross centered on the ellipse of the right-most actor
+					if (actorCount < actors.Count && i == 0)
+					{
+						var crossPen = new Pen(Brushes.Black, 1.0).Frozen();
+						dc.DrawLine(crossPen, new Point(x, y - c_actorRadius), new Point(x, y + c_actorRadius));
+						dc.DrawLine(crossPen, new Point(x - c_actorRadius, y), new Point(x + c_actorRadius, y));
+					}
+
+					angle += anglePerActor;
+				}
 			}
 		}
 
-		var formattedText = new FormattedText(
-			Node.Name,
-			System.Globalization.CultureInfo.CurrentCulture,
-			FlowDirection.LeftToRight,
-			new Typeface("Segoe UI"),
-			12,
-			Brushes.White,
-			m_pixelsPerDip);
-		var textRect = new Rect(
-			-formattedText.Width / 2,
-			c_nodeRadius + 2,
-			formattedText.Width,
-			formattedText.Height);
-		m_cachedTextRect = textRect;
+		void RenderName()
+		{
+			var formattedText = new FormattedText(
+				Node.Name,
+				System.Globalization.CultureInfo.CurrentCulture,
+				FlowDirection.LeftToRight,
+				new Typeface("Segoe UI"),
+				12,
+				Brushes.White,
+				m_pixelsPerDip);
+			var textRect = new Rect(
+				-formattedText.Width / 2,
+				c_nodeRadius + 2,
+				formattedText.Width,
+				formattedText.Height);
+			m_cachedTextRect = textRect;
 
-		var backgroundBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0));
-		backgroundBrush.Freeze();
-		dc.DrawRectangle(backgroundBrush, null, textRect);
+			var backgroundBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0));
+			backgroundBrush.Freeze();
+			dc.DrawRectangle(backgroundBrush, null, textRect);
 
-		dc.DrawText(formattedText, new Point(textRect.Left, textRect.Top));
+			dc.DrawText(formattedText, new Point(textRect.Left, textRect.Top));
+		}
 	}
 
 	protected override HitTestResult? HitTestCore(PointHitTestParameters hitTestParameters)

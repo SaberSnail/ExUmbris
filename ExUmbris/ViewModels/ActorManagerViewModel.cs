@@ -15,5 +15,12 @@ public sealed class ActorManagerViewModel : ViewModelBase
 		m_actors = gameFactory.CreateActors(rng, actorCount, map);
 	}
 
+	public void ProcessActors(Random rng, MapViewModel map)
+	{
+		VerifyAccess();
+		foreach (var actor in m_actors)
+			actor.ProcessTurn(rng, map);
+	}
+
 	private IReadOnlyList<ActorViewModel> m_actors;
 }

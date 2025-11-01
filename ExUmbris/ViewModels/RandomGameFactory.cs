@@ -105,6 +105,7 @@ public sealed class RandomGameFactory : IGameFactory
 		{
 			var actor = new ActorViewModel
 			{
+				Id = i + 1,
 				Name = $"Actor {i + 1}",
 			};
 			var nodeIndex = rng.Next(map.MapNodes.Count);

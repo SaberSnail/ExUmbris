@@ -20,9 +20,12 @@
 	<Window.Resources>
 		<ResourceDictionary>
 			<DataTemplate DataType="{x:Type viewModels:MainWindowViewModel}">
-				<Grid Background="{DynamicResource WindowBackgroundBrush}">
+				<DockPanel Background="{DynamicResource WindowBackgroundBrush}" LastChildFill="True">
+					<DockPanel Background="{DynamicResource ContentBackgroundBrush}" Dock="Right" LastChildFill="False">
+						<Button Command="{Binding Converter={x:Static utility:MethodToCommandConverter.Instance}, ConverterParameter=ProcessTurn}" DockPanel.Dock="Bottom">Next Turn</Button>
+					</DockPanel>
 					<controls:MapControl Map="{Binding Map}" />
-				</Grid>
+				</DockPanel>
 			</DataTemplate>
 		</ResourceDictionary>
 	</Window.Resources>

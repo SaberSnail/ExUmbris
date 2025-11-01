@@ -29,6 +29,12 @@ public sealed class MainWindowViewModel : ViewModelBase, IDisposable
 
 	public ActorManagerViewModel ActorManager { get; }
 
+	public void ProcessTurn()
+	{
+		var rng = AppModel.Instance.Rng;
+		ActorManager.ProcessActors(rng, Map);
+	}
+
 	public void Dispose()
 	{
 	}

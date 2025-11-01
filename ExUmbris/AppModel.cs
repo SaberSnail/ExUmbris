@@ -14,7 +14,7 @@ public sealed class AppModel : NotifyPropertyChangedDispatcherBase
 	private AppModel()
 	{
 		m_taskGroup = new TaskGroup();
-		m_rng = new Random(1);
+		m_rng = new Random();
 		LogManager.Initialize(new DebugLogDestination());
 		m_currentTheme = new Uri(@"/Themes/Default/Default.xaml", UriKind.Relative);
 	}
