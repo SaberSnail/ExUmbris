@@ -13,7 +13,7 @@ public sealed class MapControl : FrameworkElement
 	{
 		m_visuals = new VisualCollection(this);
 		m_nodeVisuals = [];
-		m_lineVisuals = [];
+		m_edgeVisuals = [];
 
 		m_nodePalette = new MapNodePalette
 		{
@@ -69,8 +69,8 @@ public sealed class MapControl : FrameworkElement
 				nodeVisual.Offset = new Vector(center.X, center.Y);
 			}
 
-			foreach (var lineVisual in m_lineVisuals)
-				lineVisual.Render();
+			foreach (var edgeVisual in m_edgeVisuals)
+				edgeVisual.Render();
 		}
 		return base.ArrangeOverride(finalSize);
 	}
@@ -104,7 +104,8 @@ public sealed class MapControl : FrameworkElement
 	private void RebuildVisuals()
 	{
 		m_visuals.Clear();
-		m_lineVisuals.Clear();
+		m_nodeVisuals.Clear();
+		m_edgeVisuals.Clear();
 		if ((Map?.MapNodes?.Count ?? 0) == 0)
 			return;
 
@@ -112,7 +113,7 @@ public sealed class MapControl : FrameworkElement
 		var dpi = VisualTreeHelper.GetDpi(this).PixelsPerDip;
 
 		// Create node visuals and index by node ID
-		foreach (var node in Map.MapNodes)
+		foreach (var node in Map!.MapNodes)
 		{
 			var visual = new MapNodeVisual(node, dpi, m_nodePalette);
 			visual.Render();
@@ -121,7 +122,7 @@ public sealed class MapControl : FrameworkElement
 			m_nodeVisuals[node.Id] = visual;
 		}
 
-		// Create connection visuals
+		// Create edge visuals
 		var drawn = new HashSet<(int, int)>();
 		foreach (var node in Map.MapNodes)
 		{
@@ -134,18 +135,18 @@ public sealed class MapControl : FrameworkElement
 				drawn.Add(key);
 				var node1 = m_nodeVisuals[id1];
 				var node2 = m_nodeVisuals[id2];
-				var connectionVisual = new MapConnectionVisual(node1, node2);
-				connectionVisual.Render();
-				m_lineVisuals.Add(connectionVisual);
+				var edgeVisual = new MapEdgeVisual(node1, node2);
+				edgeVisual.Render();
+				m_edgeVisuals.Add(edgeVisual);
 
 				// Add connection to both nodes
-				node1.ConnectedConnections.Add(connectionVisual);
-				node2.ConnectedConnections.Add(connectionVisual);
+				node1.Edges.Add(edgeVisual);
+				node2.Edges.Add(edgeVisual);
 			}
 		}
 
-		foreach (var visual in m_lineVisuals.Cast<DrawingVisual>().Concat(m_nodeVisuals.Values))
-			m_visuals.Add(visual);
+		foreach (var edge in m_edgeVisuals.Cast<DrawingVisual>().Concat(m_nodeVisuals.Values))
+			m_visuals.Add(edge);
 
 		InvalidateVisual();
 	}
@@ -169,6 +170,6 @@ public sealed class MapControl : FrameworkElement
 
 	private readonly VisualCollection m_visuals;
 	private readonly Dictionary<int, MapNodeVisual> m_nodeVisuals;
-	private readonly List<MapConnectionVisual> m_lineVisuals;
+	private readonly List<MapEdgeVisual> m_edgeVisuals;
 	private readonly MapNodePalette m_nodePalette;
 }

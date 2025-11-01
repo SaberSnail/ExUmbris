@@ -26,12 +26,12 @@ public sealed class MapNodeVisual : DrawingVisual
 		Node = node;
 		m_pixelsPerDip = pixelsPerDip;
 		m_palette = palette;
-		ConnectedConnections = [];
+		Edges = [];
 	}
 
 	public MapNodeViewModel Node { get; }
 
-	public List<MapConnectionVisual> ConnectedConnections { get; }
+	public List<MapEdgeVisual> Edges { get; }
 
 	public bool IsHovered
 	{
@@ -42,8 +42,8 @@ public sealed class MapNodeVisual : DrawingVisual
 			{
 				m_isHovered = value;
 				Render();
-				foreach (var connection in ConnectedConnections)
-					connection.OnNodeIsHoveredChanged();
+				foreach (var edge in Edges)
+					edge.OnNodeIsHoveredChanged();
 			}
 		}
 	}
@@ -62,7 +62,7 @@ public sealed class MapNodeVisual : DrawingVisual
 			System.Globalization.CultureInfo.CurrentCulture,
 			FlowDirection.LeftToRight,
 			new Typeface("Segoe UI"),
-			14,
+			12,
 			Brushes.White,
 			m_pixelsPerDip);
 		var textRect = new Rect(

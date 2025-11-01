@@ -4,9 +4,9 @@ using GoldenAnvil.Utility.Windows;
 
 namespace ExUmbris.Controls;
 
-public sealed class MapConnectionVisual : DrawingVisual
+public sealed class MapEdgeVisual : DrawingVisual
 {
-	public MapConnectionVisual(MapNodeVisual node1, MapNodeVisual node2)
+	public MapEdgeVisual(MapNodeVisual node1, MapNodeVisual node2)
 	{
 		Node1 = node1;
 		Node2 = node2;
