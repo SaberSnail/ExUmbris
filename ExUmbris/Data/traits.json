@@ -1,0 +1,122 @@
+[
+	{
+		"Name": "Ambitious",
+		"Description": "Driven to achieve more, often seeks high-reward objectives.",
+		"Modifiers": [
+			{
+				"Attribute": "Planning",
+				"Modifier": 0.15
+			},
+			{
+				"Attribute": "RiskTolerance",
+				"Modifier": 0.15
+			}
+		],
+		"Frequency": 0.5
+	},
+	{
+		"Name": "Cautious",
+		"Description": "Prefers safe, reliable outcomes and avoids unnecessary risks.",
+		"Modifiers": [
+			{
+				"Attribute": "RiskTolerance",
+				"Modifier": -0.25
+			},
+			{
+				"Attribute": "Planning",
+				"Modifier": 0.15
+			}
+		],
+		"Frequency": 0.8
+	},
+	{
+		"Name": "Vengeful",
+		"Description": "Remembers slights and pursues retribution.",
+		"Modifiers": [
+			{
+				"Attribute": "Friendship",
+				"Modifier": -0.15
+			},
+			{
+				"Attribute": "Reputation",
+				"Modifier": 0.05
+			}
+		],
+		"Frequency": 0.2
+	},
+	{
+		"Name": "Altruistic",
+		"Description": "Acts for the benefit of others, often at personal cost.",
+		"Modifiers": [
+			{
+				"Attribute": "Friendship",
+				"Modifier": 0.20
+			},
+			{
+				"Attribute": "RiskTolerance",
+				"Modifier": -0.05
+			}
+		],
+		"Frequency": 0.4
+	},
+	{
+		"Name": "Heroic",
+		"Description": "Widely admired for courageous actions.",
+		"Modifiers": [
+			{
+				"Attribute": "Reputation",
+				"Modifier": 0.20
+			},
+			{
+				"Attribute": "RiskTolerance",
+				"Modifier": 0.10
+			}
+		],
+		"Frequency": 0.05
+	},
+	{
+		"Name": "Infamous",
+		"Description": "Known for notorious deeds, feared by many.",
+		"Modifiers": [
+			{
+				"Attribute": "Reputation",
+				"Modifier": -0.20
+			},
+			{
+				"Attribute": "RiskTolerance",
+				"Modifier": 0.10
+			}
+		],
+		"Frequency": 0.07
+	},
+	{
+		"Name": "Corrupt",
+		"Description": "Willing to bend rules for personal gain.",
+		"Modifiers": [
+			{
+				"Attribute": "Negotiation",
+				"Modifier": 0.10
+			},
+			{
+				"Attribute": "Reputation",
+				"Modifier": -0.10
+			}
+		],
+		"Frequency": 0.15
+	},
+	{
+		"Name": "Visionary",
+		"Description": "Sees possibilities others miss, plans for the long term.",
+		"Modifiers": [
+			{
+				"Attribute": "Planning",
+				"Modifier": 0.20
+			},
+			{
+				"Attribute": "Wanderlust",
+				"Modifier": 0.10
+			}
+		],
+		"Frequency": 0.1
+	}
+]

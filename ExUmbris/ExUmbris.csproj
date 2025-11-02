@@ -20,4 +20,11 @@
     <ProjectReference Include="..\..\GoldenAnvil.Utility\GoldenAnvil.Utility\GoldenAnvil.Utility.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<None Include="Data\traits.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>Data\traits.json</TargetPath>
+		</None>
+	</ItemGroup>
+
 </Project>

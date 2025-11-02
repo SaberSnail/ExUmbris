@@ -1,4 +1,5 @@
-﻿using ExUmbris.Models;
+﻿using System.Diagnostics;
+using ExUmbris.Models;
 using GoldenAnvil.Utility.Logging;
 
 namespace ExUmbris.ViewModels;
@@ -6,7 +7,7 @@ namespace ExUmbris.ViewModels;
 public interface IGameFactory
 {
 	IReadOnlyList<MapNodeViewModel> CreateMapNodes(Random rng, int count);
-	IReadOnlyList<ActorViewModel> CreateActors(Random rng, int count, MapViewModel map);
+	IReadOnlyList<ActorViewModel> CreateActors(Random rng, int count, MapViewModel map, IReadOnlyList<Trait> traits);
 }
 
 public sealed class RandomGameFactory : IGameFactory
@@ -98,7 +99,7 @@ public sealed class RandomGameFactory : IGameFactory
 		return nodes;
 	}
 
-	public IReadOnlyList<ActorViewModel> CreateActors(Random rng, int count, MapViewModel map)
+	public IReadOnlyList<ActorViewModel> CreateActors(Random rng, int count, MapViewModel map, IReadOnlyList<Trait> traits)
 	{
 		var actors = new List<ActorViewModel>(count);
 		for (int i = 0; i < count; i++)
@@ -111,10 +112,45 @@ public sealed class RandomGameFactory : IGameFactory
 			var nodeIndex = rng.Next(map.MapNodes.Count);
 			var node = map.MapNodes[nodeIndex];
 			actor.CurrentNode = node;
+			foreach (var trait in GetRandomTraits(rng, traits))
+				actor.AddTrait(trait);
 			actors.Add(actor);
 		}
 
 		return actors;
+	}
+
+	private IReadOnlyList<Trait> GetRandomTraits(Random rng, IReadOnlyList<Trait> allTraits)
+	{
+		Debug.Assert(allTraits.Count != 0);
+
+		const double c_additionalTraitProbability = 0.1;
+
+		var availableTraits = new List<Trait>(allTraits);
+		var selectedTraits = new List<Trait>();
+		var traitChance = 1.0;
+		do
+		{
+			var trait = PickTrait();
+			availableTraits.Remove(trait);
+			selectedTraits.Add(trait);
+			traitChance *= c_additionalTraitProbability;
+		} while (rng.NextDouble() < traitChance && availableTraits.Count != 0);
+
+		return selectedTraits;
+
+		Trait PickTrait()
+		{
+			double totalFrequency = availableTraits.Sum(t => t.Frequency);
+			double value = rng.NextDouble() * totalFrequency;
+			foreach (var trait in availableTraits)
+			{
+				value -= trait.Frequency;
+				if (value <= 0)
+					return trait;
+			}
+			return availableTraits[^1];
+		}
 	}
 
 	private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(RandomGameFactory));
