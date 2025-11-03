@@ -14,7 +14,7 @@ public sealed class AppModel : NotifyPropertyChangedDispatcherBase
 	private AppModel()
 	{
 		m_taskGroup = new TaskGroup();
-		m_rng = new Random();
+		m_rng = new Random(1);
 		LogManager.Initialize(new DebugLogDestination());
 		m_currentTheme = new Uri(@"/Themes/Default/Default.xaml", UriKind.Relative);
 	}
@@ -47,7 +47,7 @@ public sealed class AppModel : NotifyPropertyChangedDispatcherBase
 	{
 		await state.ToSyncContext();
 
-		m_mainWindow = await MainWindowViewModel.CreateAsync(state, m_rng);
+		m_mainWindow = await MainWindowViewModel.CreateAsync(state, m_rng).ConfigureAwait(false);
 	}
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously

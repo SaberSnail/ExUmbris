@@ -2,7 +2,7 @@ using System.Windows.Media;
 
 namespace ExUmbris.Controls;
 
-public sealed class MapNodePalette
+public sealed class MapPalette
 {
 	public required Brush NodeBrush { get; init; }
 	public required Brush HoverNodeBrush { get; init; }

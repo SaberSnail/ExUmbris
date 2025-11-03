@@ -1,0 +1,129 @@
+﻿{
+ "System": [
+ "Alpha Centauri", "Sirius", "Vega", "Orion", "Andromeda",
+ "Procyon", "Altair", "Betelgeuse", "Rigel", "Capella",
+ "Arcturus", "Spica", "Pollux", "Castor", "Deneb",
+ "Fomalhaut", "Aldebaran", "Antares", "Canopus", "Bellatrix",
+ "Alnilam", "Alnitak", "Mintaka", "Mizar", "Alcor",
+ "Dubhe", "Merak", "Phecda", "Megrez", "Alioth",
+ "Alkaid", "Polaris", "Caph", "Schedar", "Mirfak"
+ ],
+ "Planet": [
+ "Aurelia", "Thalassa", "Hyperionis", "Calara", "Trionis", "Helionis", "Persea", "Rheos", "Titana", "Obera",
+ "Miral", "Iona", "Eurosa", "Ganyra", "Callara", "Phoenon", "Encelis", "Dionis", "Tethara", "Mimara",
+ "Pandorae", "Atlara", "Janara", "Epimara", "Elaris", "Ledara", "Himalis", "Carmara", "Pasira", "Sinara",
+ "Virelia", "Solara", "Lunara", "Celestra", "Astraea", "Zephira", "Orluna", "Serena", "Valara", "Nerina",
+ "Coralis", "Maris", "Ventara", "Floris", "Sylara", "Terris", "Glacia", "Ignara", "Aquara", "Pyraea",
+ "Aurorae", "Vespera", "Noctara", "Dawnara", "Duska", "Fiora", "Borealis", "Aureon", "Cyanis", "Virena",
+ "Saphira", "Rubira", "Emeris", "Topara", "Onyxis", "Opalyn", "Jadira", "Amara", "Perlina", "Quartzia",
+ "Obsidia", "Granis", "Argenta", "Platina", "Cobalta", "Ferris", "Nickara", "Zinara", "Lithara", "Tungra",
+ "Galena", "Stellara", "Nebulae", "Strata", "Altara", "Zenara", "Polara", "Cresta", "Rivara", "Delara",
+ "Fayara", "Lorana", "Mirella", "Tirena", "Vallara", "Selara", "Dorella", "Rynara", "Tessara", "Vionis"
+ ],
+ "ActorMale": [
+ "John", "William", "James", "Charles", "George", "Mohammed", "Ahmed", "Ali", "Hassan", "Omar",
+ "Wei", "Jian", "Li", "Chen", "Hao", "Raj", "Amit", "Vijay", "Arjun", "Sanjay",
+ "Ivan", "Dmitri", "Sergei", "Alexei", "Nikolai", "Hiroshi", "Takashi", "Kenji", "Yuki", "Satoshi",
+ "Pierre", "Louis", "Henri", "Jacques", "Luc", "Chinedu", "Emeka", "Ifeanyi", "Obinna", "Uche",
+ "Carlos", "Juan", "Luis", "Miguel", "Jorge", "Mehmet", "Mustafa", "Emre", "Ahmet", "Burak",
+ "David", "Robert", "Joseph", "Michael", "Edward", "Yusuf", "Said", "Khalid", "Samir", "Tariq",
+ "Zhi", "Feng", "Bo", "Lei", "Ming", "Ravi", "Kumar", "Pranav", "Deepak", "Manoj",
+ "Vladimir", "Mikhail", "Pavel", "Andrei", "Yuri", "Kenta", "Shinji", "Daichi", "Ryo", "Tomo",
+ "Antoine", "Julien", "Mathieu", "Simon", "Paul", "Babatunde", "Oluwaseun", "Ayodele", "Segun", "Tunde",
+ "Fernando", "Ricardo", "Francisco", "Diego", "Raul", "Can", "Deniz", "Kaan", "Ozan", "Serkan"
+ ],
+ "ActorFemale": [
+ "Mary", "Elizabeth", "Patricia", "Jennifer", "Linda", "Fatima", "Aisha", "Layla", "Zainab", "Sara",
+ "Mei", "Xiao", "Ling", "Hua", "Jing", "Priya", "Anjali", "Pooja", "Kavita", "Sita",
+ "Olga", "Natalia", "Irina", "Ekaterina", "Tatiana", "Yuki", "Emi", "Aya", "Rina", "Sakura",
+ "Marie", "Sophie", "Camille", "Claire", "Julie", "Ngozi", "Chiamaka", "Ada", "Amaka", "Uzoamaka",
+ "Maria", "Guadalupe", "Carmen", "Isabel", "Ana", "Elif", "Zeynep", "Aylin", "Yasemin", "Ece",
+ "Susan", "Jessica", "Karen", "Nancy", "Lisa", "Samira", "Nadia", "Mona", "Rania", "Huda",
+ "Fen", "Qing", "Yan", "Shu", "Lian", "Lakshmi", "Neha", "Ritu", "Shreya", "Divya",
+ "Svetlana", "Galina", "Marina", "Polina", "Daria", "Haruka", "Mio", "Yui", "Rei", "Nao",
+ "Charlotte", "Lucie", "Manon", "Audrey", "Celine", "Yetunde", "Oluwatoyin", "Abiola", "Funmilayo", "Kemi",
+ "Fernanda", "Gabriela", "Paola", "Veronica", "Rosa", "Seda", "Banu", "Cansu", "Derya", "Gul"
+ ],
+ "ActorLastName": [
+ "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Martinez", "Rodriguez", "Lopez", "Gonzalez",
+ "Wang", "Li", "Zhang", "Liu", "Chen", "Singh", "Patel", "Kumar", "Sharma", "Gupta",
+ "Haddad", "Nasser", "Fahmy", "Khalil", "Mansour", "Ivanov", "Petrov", "Sidorov", "Smirnov", "Volkov",
+ "Yamamoto", "Sato", "Suzuki", "Takahashi", "Tanaka", "Dubois", "Lefevre", "Moreau", "Laurent", "Roux",
+ "Okafor", "Balogun", "Adeyemi", "Chukwu", "Eze", "Hernandez", "Ramirez", "Torres", "Flores", "Rivera",
+ "Demir", "Yilmaz", "Kaya", "Sahin", "Celik", "Clark", "Lewis", "Walker", "Young", "King",
+ "Mohamed", "Ali", "Hussein", "Abdi", "Farah", "Popov", "Kuznetsov", "Morozov", "Vasiliev", "Pavlov",
+ "Kobayashi", "Kato", "Yoshida", "Nakamura", "Matsumoto", "Bernard", "Girard", "Bonnet", "Francois", "Henry",
+ "Adegoke", "Ogunleye", "Akinyemi", "Ojo", "Afolabi", "Castillo", "Jimenez", "Morales", "Ortiz", "Ramos",
+ "Arslan", "Polat", "Aydin", "Gunes", "Ozturk", "Scott", "Green", "Baker", "AdAMS", "Nelson"
+ ],
+ "LocationJumpStation": [
+ "Gateway Station", "Transit Hub", "Jump Nexus", "Portal Point", "Star Dock",
+ "Jump Station {System}", "{System} Jump Nexus", "{System} Gateway", "{System} Portal Point", "{System} Star Dock",
+ "Interstellar Jump {System}", "{System} Arrival Hub", "{System} Departure Hub", "{System} Transfer Point", "{System} Dockyard",
+ "{System} Jump Gate", "{System} Starport", "{System} Jump Array", "{System} Jump Terminal", "{System} Jump Platform",
+ "{System} Jump Center", "{System} Jump Complex", "{System} Jump Facility", "{System} Jump Station Alpha", "{System} Jump Station Beta"
+ ],
+ "LocationPlanetaryHub": [
+ "Central City", "Prime Hub", "Core Settlement", "Metropolis", "Urban Center",
+ "Central {Planet}", "{Planet} Prime Hub", "{Planet} Core Settlement", "{Planet} Metropolis", "{Planet} Urban Center",
+ "{Planet} Central District", "{Planet} Main Hub", "{Planet} City Center", "{Planet} Downtown", "{Planet} Capital",
+ "{Planet} Administrative Center", "{Planet} Civic Center", "{Planet} Plaza", "{Planet} Forum", "{Planet} Main Square",
+ "{Planet} Heart", "{Planet} Core", "{Planet} Nucleus", "{Planet} Centerpoint", "{Planet} Hubway"
+ ],
+ "LocationCommercial": [
+ "Market District", "Trade Zone", "Commerce Plaza", "Bazaar", "Exchange",
+ "{Planet} Market", "{Planet} Exchange", "{Planet} Bazaar", "{Planet} Trade Zone", "{Planet} Commerce Plaza",
+ "{Planet} Shopping Center", "{Planet} Retail Park", "{Planet} Merchant Row", "{Planet} Trading Post", "{Planet} Commercial Center",
+ "{Planet} Business District", "{Planet} Trade Center", "{Planet} Market Square", "{Planet} Vendor Plaza", "{Planet} Commerce Row",
+ "{Planet} Trade Pavilion", "{Planet} Market Hall", "{Planet} Exchange Point", "{Planet} Trade Plaza", "{Planet} Market Place"
+ ],
+ "LocationResourceExtraction": [
+ "Mining Site", "Quarry", "Drill Field", "Extraction Zone", "Resource Pit",
+ "{Planet} Quarry", "{Planet} Mining Site", "{Planet} Extraction Zone", "{Planet} Drill Field", "{Planet} Resource Pit",
+ "{Planet} Mine", "{Planet} Excavation", "{Planet} Resource Field", "{Planet} Dig Site", "{Planet} Resource Zone",
+ "{Planet} Extraction Facility", "{Planet} Resource Center", "{Planet} Mining Complex", "{Planet} Resource Works", "{Planet} Extraction Point",
+ "{Planet} Resource Station", "{Planet} Mining Outpost", "{Planet} Resource Depot", "{Planet} Quarry Works", "{Planet} Extraction Plant"
+ ],
+ "LocationFarming": [
+ "Agri Field", "Farmstead", "Crop Zone", "Harvest Plains", "Green Acres",
+ "{Planet} Farmstead", "{Planet} Agri Field", "{Planet} Crop Zone", "{Planet} Harvest Plains", "{Planet} Green Acres",
+ "{Planet} Farmland", "{Planet} Agricultural Center", "{Planet} Crop District", "{Planet} Harvest Center", "{Planet} Grow Zone",
+ "{Planet} Plantation", "{Planet} Orchard", "{Planet} Pasture", "{Planet} Grainery", "{Planet} Food District",
+ "{Planet} Farm Zone", "{Planet} Crop Fields", "{Planet} Harvest Park", "{Planet} Agri Complex", "{Planet} Farmworks"
+ ],
+ "LocationGovernmental": [
+ "Capitol", "Council Hall", "Administrative Center", "Governance Hub", "Embassy",
+ "{Planet} Capitol", "{Planet} Council Hall", "{Planet} Administrative Center", "{Planet} Governance Hub", "{Planet} Embassy",
+ "{Planet} Government Center", "{Planet} Parliament", "{Planet} Assembly Hall", "{Planet} Civic Hall", "{Planet} State House",
+ "{Planet} Government Plaza", "{Planet} Council Chambers", "{Planet} Administrative Plaza", "{Planet} Governance Center", "{Planet} Embassy Row",
+ "{Planet} State Center", "{Planet} Government District", "{Planet} Council Center", "{Planet} Administrative Block", "{Planet} Governance Park"
+ ],
+ "LocationIndustrial": [
+ "Factory Row", "Industrial Park", "Manufacturing Zone", "Assembly Plant", "Foundry",
+ "{Planet} Factory Row", "{Planet} Industrial Park", "{Planet} Manufacturing Zone", "{Planet} Assembly Plant", "{Planet} Foundry",
+ "{Planet} Industrial Center", "{Planet} Manufacturing Complex", "{Planet} Assembly Works", "{Planet} Foundry District", "{Planet} Production Zone",
+ "{Planet} Industrial Works", "{Planet} Manufacturing Park", "{Planet} Assembly District", "{Planet} Foundry Park", "{Planet} Production Center",
+ "{Planet} Industrial Block", "{Planet} Manufacturing Row", "{Planet} Assembly Plaza", "{Planet} Foundry Works", "{Planet} Production Plant"
+ ],
+ "LocationResidential": [
+ "Living Quarters", "Residential Block", "Habitat", "Home District", "Dwelling Zone",
+ "{Planet} Habitat", "{Planet} Living Quarters", "{Planet} Residential Block", "{Planet} Home District", "{Planet} Dwelling Zone",
+ "{Planet} Residential Center", "{Planet} Housing Park", "{Planet} Home Plaza", "{Planet} Living Park", "{Planet} Dwelling Center",
+ "{Planet} Residential Works", "{Planet} Housing District", "{Planet} Home Block", "{Planet} Living District", "{Planet} Dwelling Park",
+ "{Planet} Residential Plaza", "{Planet} Housing Row", "{Planet} Home Works", "{Planet} Living Block", "{Planet} Dwelling Plaza"
+ ],
+ "LocationTourism": [
+ "Resort", "Tourist Center", "Leisure Park", "Vista Point", "Attraction",
+ "{Planet} Resort", "{Planet} Tourist Center", "{Planet} Leisure Park", "{Planet} Vista Point", "{Planet} Attraction",
+ "{Planet} Tourism Center", "{Planet} Visitor Plaza", "{Planet} Leisure District", "{Planet} Vista Plaza", "{Planet} Attraction Park",
+ "{Planet} Resort Park", "{Planet} Tourist Plaza", "{Planet} Leisure Works", "{Planet} Vista Center", "{Planet} Attraction District",
+ "{Planet} Resort Center", "{Planet} Tourist Park", "{Planet} Leisure Block", "{Planet} Vista Park", "{Planet} Attraction Plaza"
+ ],
+	"LocationWilderness": [
+		"Wildlands", "Forest Edge", "Mountain Pass", "Desert Expanse", "Frontier",
+		"{Planet} Wildlands", "{Planet} Forest Edge", "{Planet} Mountain Pass", "{Planet} Desert Expanse", "{Planet} Frontier",
+		"{Planet} Wilderness", "{Planet} Outlands", "{Planet} Hinterlands", "{Planet} Backcountry", "{Planet} Wilds",
+		"{Planet} Untamed Zone", "{Planet} Nature Reserve", "{Planet} Wild Park", "{Planet} Wilderness Area", "{Planet} Wild Frontier",
+		"{Planet} Wild Expanse", "{Planet} Wild District", "{Planet} Wild Region", "{Planet} Wild Territory", "{Planet} Wild Zone"
+	]
+}

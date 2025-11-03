@@ -1,4 +1,5 @@
-﻿using GoldenAnvil.Utility.Windows.Async;
+﻿using ExUmbris.Data;
+using GoldenAnvil.Utility.Windows.Async;
 using Microsoft.VisualStudio.Threading;
 
 namespace ExUmbris.ViewModels;
@@ -7,6 +8,8 @@ public sealed class MainWindowViewModel : ViewModelBase, IDisposable
 {
 	public static async Task<MainWindowViewModel> CreateAsync(TaskStateController state, Random rng)
 	{
+		await NameHelper.InitializeAsync(state).ConfigureAwait(false);
+
 		await state.ToSyncContext();
 
 		var factory = new RandomGameFactory();

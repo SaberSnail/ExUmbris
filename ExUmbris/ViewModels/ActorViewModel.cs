@@ -16,6 +16,8 @@ public sealed class ActorViewModel : ViewModelBase
 
 	public int Id { get; init; }
 
+	public GenderKind Gender { get; init; }
+
 	public string Name { get; set; }
 
 	public IReadOnlyList<Trait> Traits => m_traits;
@@ -27,29 +29,29 @@ public sealed class ActorViewModel : ViewModelBase
 	public double GetAttributeModifier(AttributeKind attribute) =>
 		m_modifiedAttributes.FirstOrDefault(x => x.Attribute == attribute)?.Modifier ?? 0.0;
 
-	public MapNodeViewModel? CurrentNode
+	public LocationViewModel? CurrentLocation
 	{
-		get => VerifyAccess(m_currentNode);
+		get => VerifyAccess(m_currentLocation);
 		set
 		{
-			if (CurrentNode == value)
+			if (CurrentLocation == value)
 				return;
 
-			using var _ = ScopedPropertyChange(nameof(CurrentNode));
+			using var _ = ScopedPropertyChange(nameof(CurrentLocation));
 
-			if (m_currentNode is not null)
-				m_currentNode.RemoveActor(this);
-			m_currentNode = value;
-			if (m_currentNode is not null)
-				m_currentNode.AddActor(this);
+			if (m_currentLocation is not null)
+				m_currentLocation.RemoveActor(this);
+			m_currentLocation = value;
+			if (m_currentLocation is not null)
+				m_currentLocation.AddActor(this);
 		}
 	}
 
-	public IReadOnlyList<MapNodeViewModel> CurrentRoute => VerifyAccess(m_currentRoute);
+	public IReadOnlyList<LocationViewModel> CurrentRoute => VerifyAccess(m_currentRoute);
 
 	public void ProcessTurn(Random rng, MapViewModel map)
 	{
-		if (CurrentNode is null)
+		if (CurrentLocation is null)
 			return;
 
 		if (m_currentRoute.Count == 0)
@@ -57,15 +59,15 @@ public sealed class ActorViewModel : ViewModelBase
 			if (rng.NextDouble() < c_moveProbability)
 			{
 				m_currentRoute.AddRange(SelectBestTargetRoute(rng, map));
-				Log.Info($"{Name} has selected a new route from {CurrentNode!.Name} to {CurrentRoute[^1].Name}.");
+				Log.Info($"{Name} has selected a new route from {CurrentLocation!.Name} to {CurrentRoute[^1].Name}.");
 			}
 		}
 
 		if (m_currentRoute.Count > 1)
 		{
-			var nextNode = m_currentRoute[1];
-			Log.Info($"{Name} has moves from {CurrentNode!.Name} to {nextNode.Name}.");
-			CurrentNode = nextNode;
+			var nextLocation = m_currentRoute[1];
+			Log.Info($"{Name} has moves from {CurrentLocation!.Name} to {nextLocation.Name}.");
+			CurrentLocation = nextLocation;
 			if (m_currentRoute.Count == 2)
 				m_currentRoute.Clear();
 			else
@@ -79,19 +81,19 @@ public sealed class ActorViewModel : ViewModelBase
 		UpdateModifiedAttributes();
 	}
 
-	private IReadOnlyList<MapNodeViewModel> SelectBestTargetRoute(Random rng, MapViewModel map)
+	private IReadOnlyList<LocationViewModel> SelectBestTargetRoute(Random rng, MapViewModel map)
 	{
-		if (CurrentNode is null)
+		if (CurrentLocation is null)
 			return [];
 
-		var candidateNodes = map.MapNodes.Where(n => n != CurrentNode).AsReadOnlyList();
-		if (candidateNodes.Count == 0)
+		var candidateLocations = map.Locations.Where(n => n != CurrentLocation).AsReadOnlyList();
+		if (candidateLocations.Count == 0)
 			return [];
 
-		var candidateRoutes = candidateNodes
-			.Select(node =>
+		var candidateRoutes = candidateLocations
+			.Select(location =>
 			{
-				var route = map.GetShortestRoute(CurrentNode, node);
+				var route = map.GetShortestRoute(CurrentLocation, location);
 				var weight = 0.0;
 				for (int i = 1; i < route.Count; i++)
 					weight += route[i - 1].Coordinates.SquareDistanceTo(route[i].Coordinates);
@@ -124,8 +126,8 @@ public sealed class ActorViewModel : ViewModelBase
 	private const double c_moveProbability = 0.1;
 	private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(ActorViewModel));
 
-	private readonly List<MapNodeViewModel> m_currentRoute;
-	private MapNodeViewModel? m_currentNode;
+	private readonly List<LocationViewModel> m_currentRoute;
+	private LocationViewModel? m_currentLocation;
 	private readonly List<Trait> m_traits;
 	private List<AttributeModifier> m_modifiedAttributes;
 }

@@ -6,7 +6,7 @@ using GoldenAnvil.Utility.Windows;
 
 namespace ExUmbris.Controls;
 
-public sealed class MapNodeVisual : DrawingVisual
+public sealed class LocationVisual : DrawingVisual
 {
 	public static RadialGradientBrush CreateHoverGlowBrush()
 	{
@@ -22,7 +22,7 @@ public sealed class MapNodeVisual : DrawingVisual
 		return gradientBrush.Frozen();
 	}
 
-	public MapNodeVisual(MapNodeViewModel node, double pixelsPerDip, MapNodePalette palette)
+	public LocationVisual(LocationViewModel node, double pixelsPerDip, MapPalette palette)
 	{
 		Node = node;
 		m_pixelsPerDip = pixelsPerDip;
@@ -34,11 +34,11 @@ public sealed class MapNodeVisual : DrawingVisual
 
 	private void OnNodePropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (e.PropertyName is nameof(MapNodeViewModel.Name) or nameof(MapNodeViewModel.Actors))
+		if (e.PropertyName is nameof(LocationViewModel.Name) or nameof(LocationViewModel.Actors))
 			Render();
 	}
 
-	public MapNodeViewModel Node { get; }
+	public LocationViewModel Node { get; }
 
 	public List<MapEdgeVisual> Edges { get; }
 
@@ -154,7 +154,7 @@ public sealed class MapNodeVisual : DrawingVisual
 	private const double c_hoverGlowThickness = 12.0;
 
 	private readonly double m_pixelsPerDip;
-	private readonly MapNodePalette m_palette;
+	private readonly MapPalette m_palette;
 	private bool m_isHovered;
 	private Rect m_cachedTextRect;
 }

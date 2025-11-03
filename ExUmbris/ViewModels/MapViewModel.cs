@@ -1,64 +1,82 @@
-﻿namespace ExUmbris.ViewModels;
+﻿using ExUmbris.Models;
+
+namespace ExUmbris.ViewModels;
 
 public sealed class MapViewModel : ViewModelBase
 {
 	public MapViewModel()
 	{
-		m_mapNodes = [];
+		m_locations = [];
+		m_zoom = 1.0;
+		m_center = new MapCoordinates(0.0, 0.0);
 	}
 
-	public IReadOnlyList<MapNodeViewModel> MapNodes
+	public IReadOnlyList<LocationViewModel> Locations
 	{
-		get => VerifyAccess(m_mapNodes);
-		private set => SetPropertyField(value, ref m_mapNodes);
+		get => VerifyAccess(m_locations);
+		private set => SetPropertyField(value, ref m_locations);
 	}
 
-	public void Initialize(IGameFactory gameFactory, Random rng, int nodeCount)
+	public double Zoom
 	{
-		var nodes = gameFactory.CreateMapNodes(rng, nodeCount);
-		MapNodes = nodes;
+		get => VerifyAccess(m_zoom);
+		set => SetPropertyField(value, ref m_zoom);
 	}
 
-	public IReadOnlyList<MapNodeViewModel> GetShortestRoute(MapNodeViewModel sourceNode, MapNodeViewModel destinationNode)
+	public MapCoordinates Center
 	{
-		var routeQueue = new PriorityQueue<MapNodeViewModel, double>();
-		var cameFrom = new Dictionary<MapNodeViewModel, MapNodeViewModel?>();
-		var costSoFar = new Dictionary<MapNodeViewModel, double>();
+		get => VerifyAccess(m_center);
+		set => SetPropertyField(value, ref m_center);
+	}
 
-		routeQueue.Enqueue(sourceNode, 0.0);
-		cameFrom[sourceNode] = null;
-		costSoFar[sourceNode] = 0.0;
+	public void Initialize(IGameFactory gameFactory, Random rng, int locationCount)
+	{
+		var locations = gameFactory.CreateLocations(rng, locationCount);
+		Locations = locations;
+	}
+
+	public IReadOnlyList<LocationViewModel> GetShortestRoute(LocationViewModel sourceLocation, LocationViewModel destinationLocation)
+	{
+		var routeQueue = new PriorityQueue<LocationViewModel, double>();
+		var cameFrom = new Dictionary<LocationViewModel, LocationViewModel?>();
+		var costSoFar = new Dictionary<LocationViewModel, double>();
+
+		routeQueue.Enqueue(sourceLocation, 0.0);
+		cameFrom[sourceLocation] = null;
+		costSoFar[sourceLocation] = 0.0;
 
 		while (routeQueue.Count > 0)
 		{
-			var currentNode = routeQueue.Dequeue();
+			var currentLocation = routeQueue.Dequeue();
 
-			if (currentNode == destinationNode)
+			if (currentLocation == destinationLocation)
 				break;
 
-			foreach (var neighbor in currentNode.ConnectedNodes)
+			foreach (var neighbor in currentLocation.ConnectedLocations)
 			{
-				var edgeCost = currentNode.Coordinates.SquareDistanceTo(neighbor.Coordinates);
-				var newCost = costSoFar[currentNode] + edgeCost;
+				var edgeCost = currentLocation.Coordinates.SquareDistanceTo(neighbor.Coordinates);
+				var newCost = costSoFar[currentLocation] + edgeCost;
 				if (!costSoFar.ContainsKey(neighbor) || newCost < costSoFar[neighbor])
 				{
 					costSoFar[neighbor] = newCost;
 					routeQueue.Enqueue(neighbor, newCost);
-					cameFrom[neighbor] = currentNode;
+					cameFrom[neighbor] = currentLocation;
 				}
 			}
 		}
 
-		if (!cameFrom.ContainsKey(destinationNode))
-			return Array.Empty<MapNodeViewModel>();
+		if (!cameFrom.ContainsKey(destinationLocation))
+			return Array.Empty<LocationViewModel>();
 
-		var path = new List<MapNodeViewModel>();
-		for (var node = destinationNode; node != null; node = cameFrom[node])
-			path.Add(node);
+		var path = new List<LocationViewModel>();
+		for (var location = destinationLocation; location != null; location = cameFrom[location])
+			path.Add(location);
 
 		path.Reverse();
 		return path;
 	}
 
-	private IReadOnlyList<MapNodeViewModel> m_mapNodes;
+	private IReadOnlyList<LocationViewModel> m_locations;
+	private double m_zoom;
+	private MapCoordinates m_center;
 }

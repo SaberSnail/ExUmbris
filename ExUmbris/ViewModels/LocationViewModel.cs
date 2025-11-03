@@ -2,20 +2,21 @@
 
 namespace ExUmbris.ViewModels;
 
-public sealed class MapNodeViewModel : ViewModelBase
+public sealed class LocationViewModel : ViewModelBase
 {
-	public MapNodeViewModel()
+	public LocationViewModel()
 	{
-		Name = "Unknown Map Node";
+		Name = "Unknown Location";
 		Coordinates = new(0.0, 0.0);
-		ConnectedNodes = [];
+		ConnectedLocations = [];
 		m_actors = [];
 	}
 
 	public int Id { get; init; }
+	public LocationKind Kind { get; set; }
 	public string Name { get; set; }
 	public MapCoordinates Coordinates { get; set; }
-	public IReadOnlyList<MapNodeViewModel> ConnectedNodes { get; set; }
+	public IReadOnlyList<LocationViewModel> ConnectedLocations { get; set; }
 	public IReadOnlyList<ActorViewModel> Actors => VerifyAccess(m_actors);
 
 	public void RemoveActor(ActorViewModel actor)

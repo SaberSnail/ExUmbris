@@ -25,6 +25,10 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<TargetPath>Data\traits.json</TargetPath>
 		</None>
+		<None Include="Data\names.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>Data\names.json</TargetPath>
+		</None>
 	</ItemGroup>
 
 </Project>

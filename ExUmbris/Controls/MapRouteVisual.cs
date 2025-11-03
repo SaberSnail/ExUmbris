@@ -6,14 +6,14 @@ namespace ExUmbris.Controls;
 
 public sealed class MapRouteVisual : DrawingVisual
 {
-	public MapRouteVisual(IReadOnlyList<MapNodeVisual> nodes)
+	public MapRouteVisual(IReadOnlyList<LocationVisual> nodes)
 	{
 		Nodes = nodes;
 		var pen = new Pen(new SolidColorBrush(Color.FromRgb(255,0,0)), 1.0).Frozen();
 		m_routePen = pen;
 	}
 
-	public IReadOnlyList<MapNodeVisual> Nodes { get; }
+	public IReadOnlyList<LocationVisual> Nodes { get; }
 
 	public void Render()
 	{

@@ -6,7 +6,7 @@ namespace ExUmbris.Controls;
 
 public sealed class MapEdgeVisual : DrawingVisual
 {
-	public MapEdgeVisual(MapNodeVisual node1, MapNodeVisual node2)
+	public MapEdgeVisual(LocationVisual node1, LocationVisual node2)
 	{
 		Node1 = node1;
 		Node2 = node2;
@@ -14,8 +14,8 @@ public sealed class MapEdgeVisual : DrawingVisual
 		m_nodeHoveredLinePen = new Pen(new SolidColorBrush(Color.FromRgb(255, 215, 0)), 3.0).Frozen();
 	}
 
-	public MapNodeVisual Node1 { get; }
-	public MapNodeVisual Node2 { get; }
+	public LocationVisual Node1 { get; }
+	public LocationVisual Node2 { get; }
 
 	public void OnNodeIsHoveredChanged() => Render();
 

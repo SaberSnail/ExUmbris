@@ -32,14 +32,14 @@ public partial class App : Application
 	}
 
 #pragma warning disable VSTHRD100 // Avoid async void methods
-	protected override async void OnExit(ExitEventArgs e) => await OnShutdownAsync(e);
+	protected override async void OnExit(ExitEventArgs e) => await OnShutdownAsync(e).ConfigureAwait(false);
 #pragma warning restore VSTHRD100 // Avoid async void methods
 
 	private async Task OnShutdownAsync(ExitEventArgs e)
 	{
 		using var logScope = Log.TimedInfo("Shutting down");
 
-		await AppModel.Instance.ShutdownAsync();
+		await AppModel.Instance.ShutdownAsync().ConfigureAwait(false);
 
 		base.OnExit(e);
 	}
