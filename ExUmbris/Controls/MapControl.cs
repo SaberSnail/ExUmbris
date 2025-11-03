@@ -11,6 +11,7 @@ public sealed class MapControl : FrameworkElement
 {
 	public MapControl()
 	{
+		m_levelOfDetail = LevelOfDetail.All;
 		m_visuals = new VisualCollection(this);
 		m_nodeVisuals = [];
 		m_edgeVisuals = [];
@@ -59,7 +60,10 @@ public sealed class MapControl : FrameworkElement
 	private static void OnZoomChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
 		var control = (MapControl) d;
-		control.InvalidateArrange();
+		if (control.GetLevelOfDetail() != control.m_levelOfDetail)
+			control.RebuildVisuals();
+		else
+			control.InvalidateArrange();
 	}
 
 	public static readonly DependencyProperty CenterProperty =
@@ -86,11 +90,6 @@ public sealed class MapControl : FrameworkElement
 		// Background
 		drawingContext.DrawRectangle(Brushes.Black, null, new Rect(0, 0, ActualWidth, ActualHeight));
 
-		// Border outside the map area
-		var outerBounds = GetSquareBounds(ActualWidth, ActualHeight);
-		outerBounds.Inflate(c_mapBorderThickness, c_mapBorderThickness);
-		drawingContext.DrawRectangle(null, new Pen(Brushes.DarkGray, c_mapBorderThickness), outerBounds);
-
 		base.OnRender(drawingContext);
 	}
 
@@ -113,6 +112,14 @@ public sealed class MapControl : FrameworkElement
 				routeVisual.Render();
 		}
 		return base.ArrangeOverride(finalSize);
+	}
+
+	protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+	{
+		base.OnRenderSizeChanged(sizeInfo);
+		Clip = new RectangleGeometry(new Rect(0,0, ActualWidth, ActualHeight));
+		if (GetLevelOfDetail() != m_levelOfDetail)
+			RebuildVisuals();
 	}
 
 	protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
@@ -234,6 +241,20 @@ public sealed class MapControl : FrameworkElement
 		}
 	}
 
+	private LevelOfDetail GetLevelOfDetail()
+	{
+		var bounds = GetSquareBounds(ActualWidth, ActualHeight);
+		var p1 = MapToControl(new MapCoordinates(0.0, 0.0), bounds, Center, Zoom);
+		var p2 = MapToControl(new MapCoordinates(1.0, 0.0), bounds, Center, Zoom);
+		var pixelsPerMapUnit = (p2 - p1).Length;
+
+		return pixelsPerMapUnit switch
+		{
+			< 800.0 => LevelOfDetail.JumpStationsOnly,
+			_ => LevelOfDetail.All,
+		};
+	}
+
 	private void RebuildVisuals()
 	{
 		m_visuals.Clear();
@@ -249,8 +270,13 @@ public sealed class MapControl : FrameworkElement
 		var dpi = VisualTreeHelper.GetDpi(this).PixelsPerDip;
 		var zoom = Zoom;
 
+		IEnumerable<LocationViewModel> locationsToRender = Map!.Locations;
+		m_levelOfDetail = GetLevelOfDetail();
+		if (m_levelOfDetail == LevelOfDetail.JumpStationsOnly)
+			locationsToRender = locationsToRender.Where(x => x.Kind == LocationKind.JumpStation);
+
 		// Create node visuals and index by node ID
-		foreach (var node in Map!.Locations)
+		foreach (var node in locationsToRender)
 		{
 			var visual = new LocationVisual(node, dpi, m_palette);
 			visual.Render();
@@ -261,10 +287,12 @@ public sealed class MapControl : FrameworkElement
 
 		// Create edge visuals
 		var drawn = new HashSet<(int, int)>();
-		foreach (var node in Map.Locations)
+		foreach (var node in locationsToRender)
 		{
 			foreach (var connected in node.ConnectedLocations)
 			{
+				if (!m_nodeVisuals.ContainsKey(connected.Id))
+					continue;
 				int id1 = node.Id, id2 = connected.Id;
 				var key = id1 < id2 ? (id1, id2) : (id2, id1);
 				if (drawn.Contains(key))
@@ -303,7 +331,6 @@ public sealed class MapControl : FrameworkElement
 
 	private static Point MapToControl(MapCoordinates coords, Rect bounds, MapCoordinates center, double zoom)
 	{
-		// Center is now variable, apply zoom
 		var scaledWidth = bounds.Width / zoom;
 		var scaledHeight = bounds.Height / zoom;
 		var x = bounds.Left + ((coords.X - center.X) + 1.0) / 2.0 * scaledWidth + (bounds.Width - scaledWidth) / 2.0;
@@ -320,6 +347,12 @@ public sealed class MapControl : FrameworkElement
 		return new MapCoordinates(x, y);
 	}
 
+	private enum LevelOfDetail
+	{
+		All,
+		JumpStationsOnly,
+	}
+
 	private static ILogSource Log { get; } = LogManager.CreateLogSource(nameof(MapControl));
 
 	private const double c_mapBorderThickness = 4.0;
@@ -332,4 +365,5 @@ public sealed class MapControl : FrameworkElement
 	private readonly MapPalette m_palette;
 	private Point? m_lastDragPoint;
 	private MapCoordinates? m_dragStartCenter;
+	private LevelOfDetail m_levelOfDetail;
 }
